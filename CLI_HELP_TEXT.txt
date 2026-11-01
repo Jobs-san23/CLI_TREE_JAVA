@@ -1,0 +1,25 @@
++------------------------------------------------------------------+
+|                         T R E E   C L I                          |
+|            Muestra la estructura de carpetas en arbol            |
++------------------------------------------------------------------+
+
+ USO:  tree [opciones] [directorio]
+
++----------+-------------------------------------------------------+
+| Opcion   | Descripcion                                           |
++----------+-------------------------------------------------------+
+| -a       | Muestra todos los archivos, incluidos los ocultos     |
+| -d       | Muestra solo directorios (omite archivos)             |
+| -f       | Imprime la ruta completa de cada elemento             |
+| -t       | Ordena por fecha de ultima modificacion               |
+| -L <n>   | Profundidad maxima del arbol                          |
+| -P <pat> | Filtra archivos por patron (ej: -P "*.py")            |
+| -I <pat> | Ignora por patron (ej: -I "node_modules")             |
+| --help   | Muestra esta ayuda                                    |
++----------+-------------------------------------------------------+
+
+ EJEMPLOS:
+   tree -L 2
+   tree -a -f
+   tree -P "*.py" -I "__pycache__"
+   tree -d -L 3 C:\Proyectos
