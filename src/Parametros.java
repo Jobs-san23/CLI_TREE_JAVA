@@ -8,7 +8,6 @@ import java.util.Comparator;
 
 public interface Parametros {
     MetodosCLI arbol = new MetodosCLI();
-
     //***************************************************************
     static void parametro_a (File raiz, String[] parametros,int nivel){
         System.out.print(arbol.imprimirArbol(raiz, parametros,nivel));
@@ -16,17 +15,10 @@ public interface Parametros {
     //***************************************************************
     static void parametro_d (File raiz, String[] parametros,int  nivel){
         System.out.print(arbol.imprimirArbol(raiz, parametros,nivel));
-
-//        try (Stream<Path> stream = Files.list(raiz.toPath())) {
-//            stream.filter(Files::isDirectory)
-//                    .forEach(System.out::println);
-//        } catch (IOException e) {
-//            IO.println("Error al listar los directorios: " + e.getMessage());
-//        }
     }
     //***************************************************************
     static void parametro_f (File raiz){
-
+        //la clase Stream hace que se pueda recorrer el directorio y sus subdirectorios de manera recursiva y se imprime la ruta absoluta de cada archivo
         try (Stream<Path> stream = Files.list(raiz.toPath())){
             stream.forEach(Path -> System.out.println(Path.toAbsolutePath()));
         } catch (IOException e) {
@@ -40,6 +32,7 @@ public interface Parametros {
             try {
                 return Files.getLastModifiedTime(p);
             } catch (IOException e) {
+
                 return FileTime.fromMillis(0);
             }
         });
