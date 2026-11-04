@@ -10,18 +10,19 @@ public interface Parametros {
     MetodosCLI arbol = new MetodosCLI();
 
     //***************************************************************
-    static void parametro_a (File raiz, String[] parametros){
-        arbol.imprimirArbol(raiz, parametros,0);
+    static void parametro_a (File raiz, String[] parametros,int nivel){
+        System.out.print(arbol.imprimirArbol(raiz, parametros,nivel));
     }
     //***************************************************************
-    static void parametro_d (File raiz){
+    static void parametro_d (File raiz, String[] parametros,int  nivel){
+        System.out.print(arbol.imprimirArbol(raiz, parametros,nivel));
 
-        try (Stream<Path> stream = Files.list(raiz.toPath())) {
-            stream.filter(Files::isDirectory)
-                    .forEach(System.out::println);
-        } catch (IOException e) {
-            IO.println("Error al listar los directorios: " + e.getMessage());
-        }
+//        try (Stream<Path> stream = Files.list(raiz.toPath())) {
+//            stream.filter(Files::isDirectory)
+//                    .forEach(System.out::println);
+//        } catch (IOException e) {
+//            IO.println("Error al listar los directorios: " + e.getMessage());
+//        }
     }
     //***************************************************************
     static void parametro_f (File raiz){
@@ -52,16 +53,17 @@ public interface Parametros {
     }
     //***************************************************************
 
-    static void parametro_L (File raiz, String[] parametros, int parametroNumero){
-        arbol.imprimirArbol(raiz, parametros,parametroNumero);
+    static void parametro_L (File raiz, String[] parametros, int  nivel) {
+        System.out.print(arbol.imprimirArbol(raiz, parametros, nivel));
     }
+    //***************************************************************
+    static void parametro_P (File raiz, String[] parametros, int nivel) {
+        System.out.print(MetodosCLI.imprimirArbol(raiz, parametros, nivel));
+        }
 
-    static void parametro_P (){
-
-    }
-
-    static void parametro_I () {
-
+    //***************************************************************
+    static void parametro_I(File raiz, String[] parametros, int nivel) {
+        System.out.print(MetodosCLI.imprimirArbol(raiz, parametros, nivel));
     }
 }
 

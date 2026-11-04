@@ -1,80 +1,107 @@
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.attribute.FileTime;
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import java.nio.file.Files;
 import java.lang.Exception;
-import java.nio.file.Path;
-
-
 
 public class CLI_Tree implements Parametros {
 
     public static void main(String[] args) throws Exception {
 
+        //raiz definida
+        File raiz = new File("C:\\Users\\josea\\Desktop");
+        MetodosCLI Arbol = new MetodosCLI();
 
-        Parametros metodosParametros = new Parametros() {
-        };
+        Scanner terminal = new Scanner(System.in);
+
+        List<String> comandoArray = Arrays.asList("a", "d", "f", "t", "L", "P", "I");
+
 
         while (true) {
-            //raiz definida
-            File raiz = new File("C:\\Users\\josea\\Desktop");
-            MetodosCLI Arbol = new MetodosCLI();
-
-
-            //texto de HELP
-            File archivoHelp = new File("C:\\Users\\josea\\Desktop\\LCC\\3er semestre\\PROGRAMACION III\\CLI Tree\\CLI_HELP_TEXT.txt");
-            String contenido = Files.readString(archivoHelp.toPath());
-
-
-            Scanner terminal = new Scanner(System.in);
 
             String comando = MetodosCLI.validacion_tree(terminal);
+            if (comando.equals("exit")) {
+                break;
+            }
 
-
+            //aqui si se ingresan los parametros
             String[] parametros = MetodosCLI.validacion_parametros(comando);
+//            System.out.println(Arrays.toString(parametros));
+            String[] opciones = MetodosCLI.quitarPatrones(parametros);
+            int nivel = Integer.MAX_VALUE;
 
-            List<String> comandoArray = Arrays.asList("a", "d", "f", "t", "L", "P", "I");
-            boolean condicion = Arrays.stream(parametros).allMatch(comandoArray::contains);
 
+            for (String parametro : opciones) {
+                try {
+                    nivel = Integer.parseInt(parametro);
+                    break;
+                } catch (NumberFormatException e) {
+                }
+            }
+
+            List<String> lista = Arrays.asList(opciones);
+            boolean condicionNumero = Arrays.stream(opciones).anyMatch(p -> p.matches("\\d+"));
+
+            boolean condicion = Arrays.stream(opciones)
+                    .allMatch(p -> comandoArray.contains(p) || p.matches("\\d+"))
+                    && (lista.contains("L") == condicionNumero)
+                    && (!lista.contains("P") || MetodosCLI.obtenerPatron(parametros, "P") != null)
+                    && (!lista.contains("I") || MetodosCLI.obtenerPatron(parametros, "I") != null);
 
 
             if (condicion) {
-                for (String parametro : parametros) {
-                    switch (parametro) {
-                        case "a":
-
-
-                            Parametros.parametro_a(raiz, parametros);
-
-
-                        case "d":
-
-                            Parametros.parametro_d(raiz);
-
-
-                        case "f":
-
-                            Parametros.parametro_f(raiz);
-
-                        case "t":
-
-                            Parametros.parametro_t(raiz);
-
-
-
+                if (parametros.length == 0) {
+                    Parametros.parametro_a(raiz, parametros, nivel);
+                } else {
+                    boolean arbolImpreso = false;
+                    for (String parametro : parametros) {
+                        switch (parametro) {
+                            case "a":
+                                if (!arbolImpreso) {
+                                    Parametros.parametro_a(raiz, parametros, nivel);
+                                    arbolImpreso = true;
+                                }
+                                break;
+                            case "d":
+                                if (!arbolImpreso) {
+                                    Parametros.parametro_d(raiz, parametros, nivel);
+                                    arbolImpreso = true;
+                                }
+                                break;
+                            case "f":
+                                Parametros.parametro_f(raiz);
+                                break;
+                            case "t":
+                                Parametros.parametro_t(raiz);
+                                break;
+                            case "L":
+                                if (!arbolImpreso) {
+                                    Parametros.parametro_L(raiz, parametros, nivel);
+                                    arbolImpreso = true;
+                                }
+                                break;
+                            case "P":
+                                if (!arbolImpreso) {
+                                    Parametros.parametro_P(raiz, parametros, nivel);
+                                    arbolImpreso = true;
+                                }
+                                break;
+                            case "I":
+                                if (!arbolImpreso) {
+                                    Parametros.parametro_I(raiz, parametros, nivel);
+                                    arbolImpreso = true;
+                                }
+                                break;
+                        }
                     }
                 }
-
-            } else {
-                IO.println(contenido);
+                    } else {
+                    File archivoHelp = new File("C:\\Users\\josea\\Desktop\\LCC\\3er semestre\\PROGRAMACION III\\CLI Tree\\CLI_HELP_TEXT.txt");
+                    IO.println(Files.readString(archivoHelp.toPath()));
+                    }
+                }
             }
-        }
-    }
 
-}
+        }
 
 
 
