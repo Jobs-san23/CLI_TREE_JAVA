@@ -58,5 +58,18 @@ public interface Parametros {
     static void parametro_I(File raiz, String[] parametros, int nivel) {
         System.out.print(MetodosCLI.imprimirArbol(raiz, parametros, nivel));
     }
+
+    static void help() {
+        IO.println("Uso: tree [-a] [-d] [-f] [-t] [-L nivel] [-P patron] [-I patron]");
+        IO.println("-a  muestra todo el arbol");
+        IO.println("-d  solo directorios");
+        IO.println("-f  lista rutas absolutas");
+        IO.println("-t  ordena por fecha de modificacion");
+        IO.println("-L  limita la profundidad (ejemplo: -L 2)");
+        IO.println("-P  solo archivos que coincidan con el patron");
+        IO.println("-I  ignora archivos que coincidan con el patron");
+        IO.println("Escribe 'exit' para salir");
+    }
+
 }
 

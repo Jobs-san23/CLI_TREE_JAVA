@@ -8,7 +8,15 @@ public class CLI_Tree implements Parametros {
     public static void main(String[] args) throws Exception {
 
         //raiz definida
-        File raiz = new File("C:\\Users\\josea\\Desktop");
+//        File raiz = new File(System.getProperty("user.dir"));
+
+        File raiz = args.length > 0 ? new File(args[0]) : new File(System.getProperty("user.dir"));
+
+        if (!raiz.isDirectory()){
+            IO.println("Error: la ruta no existe o no e una carpeta: " + raiz);
+            return;
+        }
+
         MetodosCLI Arbol = new MetodosCLI();
         //Scanner para leer la entrada del usuario
         Scanner terminal = new Scanner(System.in);
@@ -24,12 +32,16 @@ public class CLI_Tree implements Parametros {
 
             //aqui si se ingresan los parametros
             String[] parametros = MetodosCLI.validacion_parametros(comando);
-            //se quitan los patrones de los parametros
+            //se quitan los patrones de los parametros --> I y P
             String[] opciones = MetodosCLI.quitarPatrones(parametros);
             //se define un nivel por defecto
             int nivel = Integer.MAX_VALUE;
 
-            // se busca si hay un parametro que sea un numero para definir el nivel y se obtiene un unico valor
+//            for (String parametro : parametros) {
+//                IO.println("Parametro: " + parametro + " ");
+//            }
+
+            //se busca si hay un parametro que sea un numero para definir el nivel y se obtiene un unico valor --> opcion L
             for (String parametro : opciones) {
                 try {
                     nivel = Integer.parseInt(parametro);
@@ -41,7 +53,7 @@ public class CLI_Tree implements Parametros {
             List<String> lista = Arrays.asList(opciones);
             //se crea la variable condicionNumero para verificar si hay un parametro que sea un numero
             boolean condicionNumero = Arrays.stream(opciones).anyMatch(p -> p.matches("\\d+"));
-            // se crea la variable condicion para verificar si todos los parametros son validos y si se cumplen las condiciones de los parametros L,P e I
+            // se crea la variable condicion para verificar si todos los parametros son validos y si se cumplen las condiciones de los parametros
             boolean condicion = Arrays.stream(opciones)
                     .allMatch(p -> comandoArray.contains(p) || p.matches("\\d+"))
                     && (lista.contains("L") == condicionNumero)
@@ -49,60 +61,59 @@ public class CLI_Tree implements Parametros {
                     && (!lista.contains("I") || MetodosCLI.obtenerPatron(parametros, "I") != null);
 
             //se hace una condicional para verificar si la variable condicion es verdadera o o no
-            if (condicion) {
-                if (parametros.length == 0) { //Si se escribe "tree" sin ningun parametro se ejecuta el metodo parametro_a que imprime el arbol completo
-                    Parametros.parametro_a(raiz, parametros, nivel);
-                } else {
-                    boolean arbolImpreso = false;
-                    for (String parametro : parametros) { //
-                        switch (parametro) {
-                            case "a":
-                                if (!arbolImpreso) {
-                                    Parametros.parametro_a(raiz, parametros, nivel);
-                                    arbolImpreso = true;
-                                }
-                                break;
-                            case "d":
-                                if (!arbolImpreso) {
-                                    Parametros.parametro_d(raiz, parametros, nivel);
-                                    arbolImpreso = true;
-                                }
-                                break;
-                            case "f":
-                                Parametros.parametro_f(raiz);
-                                break;
-                            case "t":
-                                Parametros.parametro_t(raiz);
-                                break;
-                            case "L":
-                                if (!arbolImpreso) {
-                                    Parametros.parametro_L(raiz, parametros, nivel);
-                                    arbolImpreso = true;
-                                }
-                                break;
-                            case "P":
-                                if (!arbolImpreso) {
-                                    Parametros.parametro_P(raiz, parametros, nivel);
-                                    arbolImpreso = true;
-                                }
-                                break;
-                            case "I":
-                                if (!arbolImpreso) {
-                                    Parametros.parametro_I(raiz, parametros, nivel);
-                                    arbolImpreso = true;
-                                }
-                                break;
-                        }
-                    }
-                }
-                    } else {
-                    File archivoHelp = new File("C:\\Users\\josea\\Desktop\\LCC\\3er semestre\\PROGRAMACION III\\CLI Tree\\CLI_HELP_TEXT.txt");
-                    IO.println(Files.readString(archivoHelp.toPath()));
+        if (condicion) {
+            if (parametros.length == 0) { //Si se escribe "tree" sin ningun parametro se ejecuta el metodo parametro_a que imprime el arbol completo
+                Parametros.parametro_a(raiz, parametros, nivel);
+            } else {
+                boolean arbolImpreso = false;
+                for (String parametro : parametros) { //
+                    switch (parametro) {
+                        case "a":
+                            if (!arbolImpreso) {
+                                Parametros.parametro_a(raiz, parametros, nivel);
+                                arbolImpreso = true;
+                            }
+                            break;
+                        case "d":
+                            if (!arbolImpreso) {
+                                Parametros.parametro_d(raiz, parametros, nivel);
+                                arbolImpreso = true;
+                            }
+                            break;
+                        case "f":
+                            Parametros.parametro_f(raiz);
+                            break;
+                        case "t":
+                            Parametros.parametro_t(raiz);
+                            break;
+                        case "L":
+                            if (!arbolImpreso) {
+                                Parametros.parametro_L(raiz, parametros, nivel);
+                                arbolImpreso = true;
+                            }
+                            break;
+                        case "P":
+                            if (!arbolImpreso) {
+                                Parametros.parametro_P(raiz, parametros, nivel);
+                                arbolImpreso = true;
+                            }
+                            break;
+                        case "I":
+                            if (!arbolImpreso) {
+                                Parametros.parametro_I(raiz, parametros, nivel);
+                                arbolImpreso = true;
+                            }
+                            break;
                     }
                 }
             }
-
+                } else {
+                    MetodosCLI.mostrarAyuda();
+                }
+            }
         }
+
+}
 
 
 

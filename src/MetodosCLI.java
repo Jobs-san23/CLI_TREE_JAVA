@@ -1,8 +1,11 @@
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
+import java.nio.file.Path;
 
 public class MetodosCLI {
 
@@ -91,7 +94,6 @@ public class MetodosCLI {
                 //se hace un condicional para verificar si el patron especificado por el usuario esta entre comillas, si es asi se quitan las comillas
                 return parametros[i + 1].replace("\"", "");
             }
-
         }
         return null;
     }
@@ -115,25 +117,36 @@ public class MetodosCLI {
 
     //se crea el metodo coincidePatron para verificar si el nombre del archivo o directorio coincide con el patron especificado por el usuario
     protected static boolean coincidePatron(String nombre, String patron) {
-        //se hace un condicional para verificar si el patron es nulo, si es asi se retorna true
-        String regex = patron.replace(".","\\.").replace("*", ".*").replace("?", ".");
-        return nombre.matches(regex);
+        String especiales = ".()[]{}+^$|\\";
+        String caracterRaro = "";
+        for (char c : patron.toCharArray()) {
+            if (c == '*') {
+                caracterRaro += ".*";
+            } else if (c == '?') {
+                caracterRaro += ".";
+            } else if (especiales.indexOf(c) != -1) {
+                caracterRaro += "\\" + c;
+            } else {
+                caracterRaro += c;
+            }
+        }
+        return nombre.matches(caracterRaro);
     }
-
 
     protected static String validacion_tree(Scanner terminal) {
         String comando;
-        while (true){
+        while (true) {
             IO.println("Comando: ");
-            comando = terminal.nextLine();
+            comando = terminal.nextLine().trim();
             if (comando.equals("exit")) {
-                break;
-            } else if (comando.startsWith("tree")){
-                break;
+                IO.print("Saliste del programa");
+                return comando;
             }
-            IO.println("Error: ¿Estás queriendo ejercutar el programa 'Tree'?");
+            if (comando.equals("tree") || comando.startsWith("tree ")) {
+                return comando;
+            }
+            IO.println("Error: ¿Estás queriendo ejercutar el programa 'tree'?");
         }
-        return comando;
     }
 
     //se crea el metodo validacion_parametros para validar los parametros ingresados por el usuario
@@ -154,5 +167,17 @@ public class MetodosCLI {
         }
         return parametros.toArray(new String[0]);
     }
+
+    protected static void mostrarAyuda() throws IOException {
+        try {
+            IO.println(Files.readString(Path.of("CLI_HELP_TEXT.txt")));
+        } catch (Exception e) {
+            Parametros.help();
+        }
+
+    }
+
+
+
 
 }
