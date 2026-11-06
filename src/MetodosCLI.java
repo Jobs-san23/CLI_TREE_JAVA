@@ -4,7 +4,6 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Scanner;
 import java.nio.file.Path;
 
 public class MetodosCLI {
@@ -14,7 +13,7 @@ public class MetodosCLI {
         if (!Folder.isDirectory()) {
             throw new IllegalArgumentException("La ruta especificada no es un directorio");
         }
-        int indentacion = 0;
+//        int indentacion = 0;
         //se crea una variable para verificar si se debe imprimir solo los directorios o no
         boolean condicionDirectorio = Arrays.asList((quitarPatrones(parametros))).contains("d");
         String patronP = obtenerPatron(parametros, "P");
@@ -43,8 +42,6 @@ public class MetodosCLI {
             return;
         }
 
-
-
         File[] archivos = Folder.listFiles();
         if (archivos == null) return;
 
@@ -55,7 +52,6 @@ public class MetodosCLI {
             if (patronI != null && coincidePatron(file.getName(), patronI)) {
                 continue;
             }
-
 
             if (file.isDirectory()) {
                 arbolRecursivo(file, sb, indentacion + 1, condicionDirectorio, nivel,patronP, patronI);
@@ -98,7 +94,6 @@ public class MetodosCLI {
         return null;
     }
 
-    //||||||||||||||||||||||||
     // se crea el metodo quitarPatrones para quitar los patrones especificados por el usuario de los parametros
     public static String[] quitarPatrones(String[] parametros) {
         //se crea una lista para almacenar los parametros sin los patrones
@@ -106,14 +101,12 @@ public class MetodosCLI {
         for (int i = 0; i < parametros.length; i++) {
             //se hace un condicional para verificar si el parametro es un patron, si es asi se omite y se agrega el siguiente parametro a la lista
             opciones.add(parametros[i]);
-            //se hace un condicional para verificar si el parametro es un patron, si es asi se omite y se agrega el siguiente parametro a la lista
-            if ((parametros[i].equals("P") || parametros[i].equals("I")) && i +1 < parametros.length) {
+            if ((parametros[i].equals("P") || parametros[i].equals("I")) && i + 1 < parametros.length) {
                 i++;
             }
         }
         return opciones.toArray(new String[0]);
     }
-    //|||||||||||||||||||||||||||||
 
     //se crea el metodo coincidePatron para verificar si el nombre del archivo o directorio coincide con el patron especificado por el usuario
     protected static boolean coincidePatron(String nombre, String patron) {
@@ -133,31 +126,16 @@ public class MetodosCLI {
         return nombre.matches(caracterRaro);
     }
 
-    protected static String validacion_tree(Scanner terminal) {
-        String comando;
-        while (true) {
-            IO.println("Comando: ");
-            comando = terminal.nextLine().trim();
-            if (comando.equals("exit")) {
-                IO.print("Saliste del programa");
-                return comando;
-            }
-            if (comando.equals("tree") || comando.startsWith("tree ")) {
-                return comando;
-            }
-            IO.println("Error: ¿Estás queriendo ejercutar el programa 'tree'?");
-        }
-    }
 
     //se crea el metodo validacion_parametros para validar los parametros ingresados por el usuario
     protected static String[] validacion_parametros(String comando) {
+        //se crea una lista para almacenar los parametros
         List<String> parametros = new ArrayList<>();
         //se hace un bucle para recorrer los charParametro del comando y separar los parametros de los patrones
         String[] charParametro = comando.trim().split("\\s+");
         for (int i = 1; i < charParametro.length; i++) {
             String t = charParametro[i];
             if (t.startsWith("-")) {
-                //
                 for (char c : t.substring(1).toCharArray()) {
                     parametros.add(String.valueOf(c));
                 }
@@ -170,7 +148,8 @@ public class MetodosCLI {
 
     protected static void mostrarAyuda() throws IOException {
         try {
-            IO.println(Files.readString(Path.of("CLI_HELP_TEXT.txt")));
+            Path carpetaJar = Path.of (MetodosCLI.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getParent();
+            IO.println(Files.readString(carpetaJar.resolve("CLI_HELP_TEXT.txt")));
         } catch (Exception e) {
             Parametros.help();
         }
