@@ -106,4 +106,5 @@ Java · `java.io.File` · `java.nio.file` · Streams · Expresiones regulares
 
 ---
 
-Proyecto de la materia de Programación III.
+Mini-proyecto de la materia de Programación III.
+Esta descripción fué hecha con ayuda de la IA para facilitar la descripción de este mini-proyecto.
